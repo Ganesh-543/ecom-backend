@@ -1,0 +1,37 @@
+const jwt = require("jsonwebtoken");
+const isAuth = (req, res, next) => {
+  try {
+    const token = req.cookies.JWT;
+
+    if (!token) {
+      return res.status(401).json({
+        message: "Invalid token. Login again",
+      });
+    }
+
+    const data = jwt.verify(token, process.env.JWT_SECRET);
+
+    req.user = data;
+
+    next();
+  } catch (error) {
+    console.log(error.message);
+
+    res.status(401).json({
+      message: "Invalid token. Login again",
+    });
+  }
+};
+const isAdmin = (req, res, next) => {
+  if (req.user && req.user.role === "admin") {
+    next();
+  } else {
+    res.status(403).json({
+      message: "Access denied, admin previliges require",
+    });
+  }
+};
+module.exports = {
+  isAuth,
+  isAdmin,
+};
