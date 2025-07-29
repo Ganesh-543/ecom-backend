@@ -67,7 +67,7 @@ const login = async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    res.cookie("jwt", token, {
+    res.cookie("JWT", token, {
       maxAge: 3600000,
       httpOnly: true,
       secure: true,
